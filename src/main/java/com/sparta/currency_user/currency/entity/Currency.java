@@ -1,4 +1,4 @@
-package com.sparta.currency_user.entity;
+package com.sparta.currency_user.currency.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
