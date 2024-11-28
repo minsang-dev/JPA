@@ -1,9 +1,12 @@
 package com.sparta.currency_user.exchange.service;
 
+import com.sparta.currency_user.common.enums.ErrorStatus;
+import com.sparta.currency_user.common.exception.NotFoundException;
 import com.sparta.currency_user.currency.entity.Currency;
 import com.sparta.currency_user.currency.repository.CurrencyRepository;
 import com.sparta.currency_user.exchange.dto.ExchangeResponseDto;
 import com.sparta.currency_user.exchange.entity.Exchange;
+import com.sparta.currency_user.exchange.enums.ExchangeStatus;
 import com.sparta.currency_user.exchange.repository.ExchangeRepository;
 import com.sparta.currency_user.user.entity.User;
 import com.sparta.currency_user.user.repository.UserRepository;
@@ -28,9 +31,11 @@ public class ExchangeService {
     public ExchangeResponseDto createExchangeRequest(Long userId, Long currencyId, BigDecimal amountInKrw) {
 
         // 환전을 신청할 사용자 id
-        User findUser = userRepository.findUserById(userId);
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.USER_NOT_FOUND));
         // currency 테이블의 환율 가져오기 위함
-        Currency findCurrency = currencyRepository.findCurrencyById(currencyId);
+        Currency findCurrency = currencyRepository.findById(currencyId)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.CURRENCY_NOT_FOUND));
 
         /**
          * 환전 후 금액 = 환전 전 금액 / 환율
@@ -38,7 +43,7 @@ public class ExchangeService {
         BigDecimal exchangeRate = findCurrency.getExchangeRate();
         BigDecimal amountAfterExchange = amountInKrw.divide(exchangeRate, 2, RoundingMode.HALF_UP);
 
-        Exchange exchange = new Exchange(findUser, findCurrency, amountInKrw, amountAfterExchange, "NORMAL");
+        Exchange exchange = new Exchange(findUser, findCurrency, amountInKrw, amountAfterExchange, ExchangeStatus.NORMAL);
         Exchange savedExchange = exchangeRepository.save(exchange); // 저장
 
         return new ExchangeResponseDto(
@@ -88,7 +93,7 @@ public class ExchangeService {
 
         Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow(null);
 
-        exchange.setStatus("CANCELLED");
+        exchange.setStatus(ExchangeStatus.CANCELLED);
 
         return new ExchangeResponseDto(
                 exchange.getId(),

@@ -6,6 +6,7 @@ import com.sparta.currency_user.exchange.service.ExchangeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ExchangeController {
      */
     @PostMapping
     public ResponseEntity<ExchangeResponseDto> createExchangeRequest(
-            @RequestBody ExchangeRequestDto requestDto) {
+            @Validated @RequestBody ExchangeRequestDto requestDto) {
 
         ExchangeResponseDto responseDto = exchangeService.createExchangeRequest(
                 requestDto.getUserId(),
