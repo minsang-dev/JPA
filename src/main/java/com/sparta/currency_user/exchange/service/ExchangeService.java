@@ -4,6 +4,7 @@ import com.sparta.currency_user.common.enums.ErrorStatus;
 import com.sparta.currency_user.common.exception.NotFoundException;
 import com.sparta.currency_user.currency.entity.Currency;
 import com.sparta.currency_user.currency.repository.CurrencyRepository;
+import com.sparta.currency_user.exchange.dto.ExchangeGroupResponseDto;
 import com.sparta.currency_user.exchange.dto.ExchangeResponseDto;
 import com.sparta.currency_user.exchange.entity.Exchange;
 import com.sparta.currency_user.exchange.enums.ExchangeStatus;
@@ -104,6 +105,13 @@ public class ExchangeService {
                 exchange.getStatus(),
                 exchange.getCreatedAt()
         );
-
     }
+        /**
+         * 메서드 호출
+         */
+
+        public ExchangeGroupResponseDto findExchangeGroupRequest(Long userId) {
+
+            return exchangeRepository.findExchangeGroupById(userId);
+        }
 }

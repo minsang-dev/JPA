@@ -1,5 +1,6 @@
 package com.sparta.currency_user.exchange.controller;
 
+import com.sparta.currency_user.exchange.dto.ExchangeGroupResponseDto;
 import com.sparta.currency_user.exchange.dto.ExchangeRequestDto;
 import com.sparta.currency_user.exchange.dto.ExchangeResponseDto;
 import com.sparta.currency_user.exchange.service.ExchangeService;
@@ -57,4 +58,16 @@ public class ExchangeController {
         return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
 
+    /**
+     * 고객의 모든 환전 요청 그룹화 조회
+     */
+
+    @GetMapping("/group/{userId}")
+    public ResponseEntity<ExchangeGroupResponseDto> findGroupExchanges(
+            @PathVariable Long userId
+    ) {
+        ExchangeGroupResponseDto exchangeGroupDto = exchangeService.findExchangeGroupRequest(userId);
+        return new ResponseEntity<>(exchangeGroupDto, HttpStatus.OK);
+
+    }
 }
